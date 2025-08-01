@@ -11,11 +11,24 @@ const ses = new SESClient({
 });
 
 
+function chunkArray(arr, size) {
+  const chunks = []
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size))
+  }
+  return chunks
+}
+
+
 export async function sendBulkMail(toAddresses, subject, htmlContent) {
 
+  const emailList = toAddresses.map(user => user.email)
+  const batches = chunkArray(emailList, 2); // Max 50 emails per SES send
+
+  for (const batch of batches){
   const params = {
     Destination: {
-      ToAddresses: ["shubhrathod192@gmail.com", "shubhamcodes7@gmail.com"],
+      ToAddresses: emailList
     },
     Message: {
       Body: {
@@ -33,10 +46,11 @@ export async function sendBulkMail(toAddresses, subject, htmlContent) {
   try {
     const command = new SendEmailCommand(params);
     const response = await ses.send(command);
-    console.log("Email sent successfully:", response.MessageId);
+    console.log("Sent batch:", batch, "MessageId:", response.MessageId);
     return true
   } catch (err) {
-    console.error("Error sending email:", err);
+    console.error("Error sending batch:", batch, err);
   }
 }
 
+}
