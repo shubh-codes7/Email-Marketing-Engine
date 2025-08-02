@@ -7,8 +7,8 @@ export const templateRouter = Router()
 //create template
 templateRouter.post('/', async (req, res) => {
   try {
-    const {name, subject, htmlBody} = req.body
-    const template = await Template.create({name, subject, htmlBody})
+    const {name, subject, htmlContent} = req.body
+    const template = await Template.create({name, subject, htmlContent})
     res.status(201).json({message: "Template created successfully", template})
   } catch (error) {
     console.log(error);

@@ -9,7 +9,7 @@ const templateSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  htmlBody: {
+  htmlContent: {
     type: String,
     required: true
   }

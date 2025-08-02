@@ -6,7 +6,7 @@ export const pipelineRouter = Router()
 //fetch all pipelines
 pipelineRouter.get('/', async (req, res) => {
   try{
-    const pipelines = await pipelineModel.find().populate('contactListId')
+    const pipelines = await pipelineModel.find()
     res.status(200).json({message: "Pipelines fetched successfully", pipelines})
   } catch (error) {
     console.log(error);
@@ -18,8 +18,8 @@ pipelineRouter.get('/', async (req, res) => {
 //Create a new pipeline
 pipelineRouter.post('/', async (req, res) => {
   try{
-    const {name, steps, contactListId} = req.body
-    const pipeline = await pipelineModel.create({name, steps, contactListId})
+    const {name, steps, listname, contacts} = req.body
+    const pipeline = await pipelineModel.create({name, steps, listname, contacts})
     res.status(201).json({message: "Pipelines created successfully", pipeline})
   } catch (error) {
     console.log(error);

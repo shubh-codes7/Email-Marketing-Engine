@@ -8,10 +8,11 @@ const stepSchema = mongoose.Schema({
 const pipelineSchema = mongoose.Schema({
   name: { type: String, required: true },
   steps: [stepSchema],
-  contactListId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "ContactList",
+  listname: {
+    type: String,
+    required: true
   },
+  contacts: [],
 });
 
 export default mongoose.model("Pipeline", pipelineSchema);

@@ -132,10 +132,12 @@ credentials
 # Server specific
 server/uploads/
 server/logs/
+server/node_modules
 
 # Client specific
 client/dist/
 client/build/
+client/node_modules
 
 # Local files
 *.local
