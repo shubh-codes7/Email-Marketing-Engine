@@ -16,7 +16,7 @@ export default function Pipeline() {
 
   const fetchPipelines = async () => {
     try {
-      const res = await fetch('http://localhost:3000/pipeline');
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/pipeline`);
       const data = await res.json();
       console.log("pipelines", data);
       setPipelines(data.pipelines);
@@ -28,9 +28,12 @@ export default function Pipeline() {
   };
 
   useEffect(() => {
+
+    console.log(`${import.meta.env.VITE_BASE_URL}/template`);
+    
     const fetchTemplates = async () => {
       try {
-        const res = await fetch("http://localhost:3000/template");
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/template`);
         const data = await res.json()
         console.log("templates", data);
         setTemplates(data.templates);
@@ -65,7 +68,7 @@ export default function Pipeline() {
     console.log("Submitting Pipeline:", payload);
 
     try {
-      const res = await fetch("http://localhost:3000/pipeline", {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/pipeline`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

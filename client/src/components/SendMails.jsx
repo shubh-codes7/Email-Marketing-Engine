@@ -6,7 +6,7 @@ export default function SendMails({ pipelines, loading }) {
   const handleSendMails = async (pipelineId) => {
     setSending(true);
     try {
-      const res = await fetch('http://localhost:3000/mail/send-emails', {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/mail/send-emails`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pipelineId }), // Adjust this payload if your API expects more

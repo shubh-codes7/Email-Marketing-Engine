@@ -11,7 +11,9 @@ dotenv.config()
 const app = express()
 
 
-app.use(cors())
+app.use(cors({
+  origin: ['https://email-marketing-eta.vercel.app/', 'http://localhost:5173/', process.env.CLIENT_URL]
+}))
 app.use(express.json())
 
 app.use('/template', templateRouter)

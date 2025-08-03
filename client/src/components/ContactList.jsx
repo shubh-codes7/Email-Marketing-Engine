@@ -16,10 +16,10 @@ export default function ContactList({setContacts, listName, setListName}) {
 
     const formData = new FormData();
     formData.append("name", listName);
-    formData.append("contacts", file); // contacts field name must match multer config
+    formData.append("contacts", file); 
 
     try {
-      const res = await fetch("http://localhost:3000/contact", {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/contact`, {
         method: "POST",
         body: formData,
       });
