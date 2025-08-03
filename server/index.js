@@ -6,7 +6,7 @@ import { templateRouter } from './routes/template.route.js'
 import { pipelineRouter } from './routes/pipeline.route.js'
 import { contactListRouter } from './routes/contactList.route.js'
 import { mailRouter } from './routes/mail.route.js'
-import './utils/emailQueue.js'
+// import './utils/emailQueue.js'
 dotenv.config()
 const app = express()
 
