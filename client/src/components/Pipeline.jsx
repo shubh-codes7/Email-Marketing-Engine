@@ -6,7 +6,7 @@ export default function Pipeline() {
   const [pipelineName, setPipelineName] = useState("");
   const [templates, setTemplates] = useState([]);
   const [contacts, setContacts] = useState()
-  const [listName, setListName] = useState("");
+  // const [listName, setListName] = useState("");
   const [pipelines, setPipelines] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,10 +27,7 @@ export default function Pipeline() {
     }
   };
 
-  useEffect(() => {
-
-    console.log(`${import.meta.env.VITE_BASE_URL}/template`);
-    
+  useEffect(() => {    
     const fetchTemplates = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_BASE_URL}/template`);
@@ -64,7 +61,24 @@ export default function Pipeline() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { name: pipelineName, steps, listname: listName, contacts: contacts.contactList.contacts };
+
+    // Validation checks
+    if (!pipelineName.trim()) {
+      alert("Please enter a pipeline name");
+      return;
+    }
+
+    if (!contacts) {
+      alert("Please select a contact list");
+      return;
+    }
+
+    if (steps.length === 0) {
+      alert("Please add at least one step to the pipeline");
+      return;
+    }
+
+    const payload = { name: pipelineName, steps, listname: contacts.name, contacts: contacts.contacts };
     console.log("Submitting Pipeline:", payload);
 
     try {
@@ -77,14 +91,13 @@ export default function Pipeline() {
       });
       const data = await res.json();
       alert(data.message || "Pipeline created");
-      console.log(data);
 
       await fetchPipelines();
 
       setPipelineName("");
       setSteps([{ templateId: "", delayMinutes: 0 }]);
       setContacts(null);
-      setListName("");
+      // setListName("");
     } catch (err) {
       console.error(err);
       alert("Error creating pipeline");
@@ -92,8 +105,8 @@ export default function Pipeline() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-8 bg-white rounded-xl shadow-md space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800">Create Pipeline</h2>
+    <div className="max-w-4xl mx-auto p-6 mt-8 bg-white rounded-xl shadow-md space-y-6">
+      <h2 className="text-2xl font-semibold text-center text-gray-800">Create Campaign</h2>
 
       <div className="space-y-6">
         <div>
@@ -107,9 +120,10 @@ export default function Pipeline() {
           />
         </div>
 
-        <ContactList setContacts = {setContacts} listName={listName} setListName={setListName}/>
+        <ContactList setContacts = {setContacts}/>
 
 
+        <div className="my-10 p-6 bg-white rounded-xl border-2 space-y-6">
         {steps.map((step, index) => (
           <div key={index} className="p-4 flex justify-between items-center bg-gray-100 rounded-md space-y-4">
             <h4 className="font-semibold text-gray-700">Step {index + 1}</h4>
@@ -175,6 +189,7 @@ export default function Pipeline() {
           Create Pipeline
         </button>
       </div>
+      </div>
 
 
       <SendMails 
@@ -184,7 +199,9 @@ export default function Pipeline() {
       />
 
 
-
+      <footer>
+        <p><span className="text-red-500">Warning:</span> As AWS SES is used for sending mails, mails are only sent to verified users. As for now verified mails are the listed contact List only. </p>
+      </footer>
     </div>
   );
 }

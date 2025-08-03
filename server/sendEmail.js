@@ -1,3 +1,5 @@
+//this was for testing purpose only
+
 import dotenv from "dotenv";
 dotenv.config();
 

@@ -9,7 +9,7 @@ export default function SendMails({ pipelines, loading }) {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/mail/send-emails`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pipelineId }), // Adjust this payload if your API expects more
+        body: JSON.stringify({ pipelineId }),
       });
 
       const result = await res.json();
@@ -31,6 +31,8 @@ export default function SendMails({ pipelines, loading }) {
   if (loading) return <p>Loading pipelines...</p>;
 
   return (
+    <div className="my-10 p-2 bg-white rounded-xl border-2 space-y-2">
+    <h3 className='text-2xl text-center  font-semibold text-gray-800'>Campaigns</h3>
     <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {pipelines.map(pipeline => (
         <div key={pipeline._id} className="border rounded-xl p-4 shadow-md bg-white">
@@ -40,12 +42,13 @@ export default function SendMails({ pipelines, loading }) {
           <button
             onClick={() => handleSendMails(pipeline._id)}
             disabled={sending}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
           >
-            {sending ? 'Sending...' : 'Send Mails'}
+            Send Mails
           </button>
         </div>
       ))}
+    </div>
     </div>
   );
 }

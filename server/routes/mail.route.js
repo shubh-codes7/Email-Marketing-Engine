@@ -1,11 +1,34 @@
 import { Router } from "express";
-import Template from '../models/EmailTemplate.model.js'
 import Pipeline from "../models/Pipeline.model.js"
 import ContactList from "../models/ContactList.model.js"
 import { emailQueue } from "../utils/emailQueue.js";
+import { verifyEmails } from "../utils/sendBulkMail.js";
 
 export const mailRouter = Router();
 
+//verify mails
+mailRouter.post("/verify-emails", async (req, res) => {
+  const { emails } = req.body;
+
+  if (!Array.isArray(emails) || emails.length === 0) {
+    return res.status(400).json({ message: "Email list is missing or invalid." });
+  }
+
+  try {
+    const result = await verifyEmails(emails);
+    return res.status(200).json({
+      message: "Verification emails sent.",
+      result,
+    });
+  } catch (error) {
+    console.error("Verification route error:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+
+
+//send mails
 mailRouter.post("/send-emails", async (req, res) => {
   try {
     const { pipelineId } = req.body;
