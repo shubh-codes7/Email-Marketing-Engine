@@ -37,7 +37,6 @@ mailRouter.post("/send-emails", async (req, res) => {
       return res.status(400).json({ error: "pipelineId is required" });
     }
 
-    // Get pipeline with populated contacts
     const pipeline = await Pipeline.findById(pipelineId);
     if (!pipeline) {
       return res.status(404).json({ error: "Pipeline not found" });
@@ -59,14 +58,13 @@ mailRouter.post("/send-emails", async (req, res) => {
 
     // Schedule emails for each step with delays
     const scheduledJobs = [];
+    let cumulativeDelay = 0;
     
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       
       // Calculate cumulative delay (each step waits for previous steps)
-      const cumulativeDelay = steps
-        .slice(0, i)
-        .reduce((total, s) => total + (s.delay * 60 * 1000), 0);
+      cumulativeDelay += step.delay * 60 * 1000; // Convert minutes to milliseconds
 
       const job = await emailQueue.add(
         `pipeline-${pipelineId}-step-${i}`,
@@ -90,6 +88,8 @@ mailRouter.post("/send-emails", async (req, res) => {
         stepIndex: i,
         jobId: job.id,
         scheduledFor: new Date(Date.now() + cumulativeDelay),
+        delay: step.delay,
+        cumulativeDelay: cumulativeDelay / (60 * 1000), // Convert back to minutes for display
       });
     }
 
