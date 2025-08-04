@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import connectDb from './config/db.js'
-import './utils/emailQueue.js'
+import { emailWorker, emailQueue } from './utils/emailQueue.js'
 
 // Load environment variables
 dotenv.config()
@@ -14,12 +14,40 @@ console.log('📧 Processing email queue...')
 // Handle graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('🛑 Received SIGTERM, shutting down worker gracefully...')
-  process.exit(0)
+  
+  try {
+    // Close the email worker gracefully
+    await emailWorker.close()
+    console.log('✅ Email worker closed successfully')
+    
+    // Close the queue
+    await emailQueue.close()
+    console.log('✅ Email queue closed successfully')
+    
+    process.exit(0)
+  } catch (error) {
+    console.error('❌ Error during graceful shutdown:', error)
+    process.exit(1)
+  }
 })
 
 process.on('SIGINT', async () => {
   console.log('🛑 Received SIGINT, shutting down worker gracefully...')
-  process.exit(0)
+  
+  try {
+    // Close the email worker gracefully
+    await emailWorker.close()
+    console.log('✅ Email worker closed successfully')
+    
+    // Close the queue
+    await emailQueue.close()
+    console.log('✅ Email queue closed successfully')
+    
+    process.exit(0)
+  } catch (error) {
+    console.error('❌ Error during graceful shutdown:', error)
+    process.exit(1)
+  }
 })
 
 // Handle uncaught exceptions
