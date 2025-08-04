@@ -6,12 +6,11 @@ export default function Pipeline() {
   const [pipelineName, setPipelineName] = useState("");
   const [templates, setTemplates] = useState([]);
   const [contacts, setContacts] = useState()
-  // const [listName, setListName] = useState("");
   const [pipelines, setPipelines] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [steps, setSteps] = useState([
-    { templateId: "", delayMinutes: 0 },
+    { templateId: "", delay: 0 },
   ]);
 
   const fetchPipelines = async () => {
@@ -46,12 +45,12 @@ export default function Pipeline() {
 
   const handleStepChange = (index, field, value) => {
     const newSteps = [...steps];
-    newSteps[index][field] = field === "delayMinutes" ? parseInt(value) : value;
+    newSteps[index][field] = field === "delay" ? parseInt(value) : value;
     setSteps(newSteps);
   };
 
   const addStep = () => {
-    setSteps([...steps, { templateId: "", delayMinutes: 0 }]);
+    setSteps([...steps, { templateId: "", delay: 0 }]);
   };
 
   const removeStep = (index) => {
@@ -95,7 +94,7 @@ export default function Pipeline() {
       await fetchPipelines();
 
       setPipelineName("");
-      setSteps([{ templateId: "", delayMinutes: 0 }]);
+      setSteps([{ templateId: "", delay: 0 }]);
       setContacts(null);
       // setListName("");
     } catch (err) {
@@ -151,8 +150,8 @@ export default function Pipeline() {
               <label className="block text-sm font-medium text-gray-600 mb-1">Delay (in minutes)</label>
               <input
                 type="number"
-                value={step.delayMinutes}
-                onChange={(e) => handleStepChange(index, "delayMinutes", e.target.value)}
+                value={step.delay}
+                onChange={(e) => handleStepChange(index, "delay", e.target.value)}
                 min={0}
                 required
                 className="w-full p-2 border rounded-md"
